@@ -1,10 +1,11 @@
 package handler
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+)
 
 
-func (h *Handler) createRecord(*gin.Context) {
-
+func (h *Handler) createRecord(c *gin.Context) {
 }
 
 func (h *Handler) getRecord(*gin.Context) {

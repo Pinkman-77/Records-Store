@@ -1,17 +1,26 @@
 package service
 
-import "github.com/Pinkman-77/records-restapi/repository"
+import (
+	"github.com/Pinkman-77/records-restapi/repository"
+)
 
-type Records interface {
+type Creator interface {
+}
+
+type Record interface {
+}
+
+type RecordItems interface {
 
 }
 
 type Service struct {
-	Records
+	Creator
+	Record
+	RecordItems
 }
 
-func NewService(repo repository.Repository) *Service {
+func NewService(repo *repository.Repository) *Service {
 	return &Service{
-		// Records: NewRecordsService(repo),
 	}
 }

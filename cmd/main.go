@@ -10,11 +10,16 @@ import (
 )
 
 func main() {
-	srv := new(recordsrestapi.Server)
 
-	repo := repository.NewRepository()
-	service := service.NewService(*repo)
+	db, err := repository.Connect()
+	if err != nil {
+		log.Fatal("Coudn't connect to DB: ", err)
+	}
+
+	repo := repository.NewRepository(*db)
+	service := service.NewService(repo)
 	handler := handler.NewHandler(service)
+	srv := new(recordsrestapi.Server)
 
 	if err := srv.Start("8080", handler.InitRoutes()); err != nil {
 		log.Fatal("Coudn't start server: ", err)

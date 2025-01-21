@@ -1,14 +1,26 @@
 package repository
 
-type Records interface {
+import (
+	"github.com/jmoiron/sqlx"
+)
 
+type Creator interface {
+
+}
+
+type Record interface {
+}
+
+type RecordItems interface {
 }
 
 type Repository struct {
-	Records
+	Creator
+	Record
+	RecordItems
 }
 
-func NewRepository() *Repository {
+func NewRepository(db sqlx.DB) *Repository {
 	return &Repository{
 	}
 }
