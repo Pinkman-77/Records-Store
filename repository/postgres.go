@@ -26,7 +26,6 @@ const (
 	// Tables
 	artistTable = "artists"
 	albumTable  = "records"
-	itemTable   = "items"
 )
 
 func Connect() (*sqlx.DB, error) {

@@ -9,18 +9,18 @@ func (h *Handler) createArtist(c *gin.Context) {
  }
 
 
-func (h *Handler) getArtist(*gin.Context) {
+func (h *Handler) getArtist(c *gin.Context) {
 
 }
 
-func (h *Handler) getAllArtist(*gin.Context) {
+func (h *Handler) getAllArtists(c *gin.Context) {
 
 }
 
-func (h *Handler) updateArtist(*gin.Context) {
+func (h *Handler) updateArtist(c *gin.Context) {
 
 }
 
-func (h *Handler) deleteArtist(*gin.Context) {
+func (h *Handler) deleteArtist(c *gin.Context) {
 
 }

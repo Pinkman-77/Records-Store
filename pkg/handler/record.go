@@ -8,18 +8,18 @@ import (
 func (h *Handler) createRecord(c *gin.Context) {
 }
 
-func (h *Handler) getRecord(*gin.Context) {
+func (h *Handler) getRecord(c *gin.Context) {
 
 }
 
-func (h *Handler) getAllRecords(*gin.Context) {
+func (h *Handler) getAllRecords(c *gin.Context) {
 
 }
 
-func (h *Handler) updateRecord(*gin.Context) {
+func (h *Handler) updateRecord(c *gin.Context) {
 
 }
 
-func (h *Handler) deleteRecord(*gin.Context) {
+func (h *Handler) deleteRecord(c *gin.Context) {
 
 }

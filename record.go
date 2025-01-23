@@ -11,9 +11,6 @@ type Record struct {
 	Title  string  `json:"title" binding:"required"`    // Title of the record
 	Artist string  `json:"artist"`   // ID or name of the artist (you may want to use an ID reference)
 	Year   int     `json:"year"`    // Release year of the record
-}
-
-type Item struct {
 	Tracklist []string `json:"tracklist"` // List of song titles in the record
 	Credits   []string `json:"credits"`   // List of artists featured on the record
 	Duration  string   `json:"duration"`  // Total duration of the record (e.g., "45:30")

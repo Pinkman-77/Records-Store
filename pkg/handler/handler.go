@@ -21,22 +21,11 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		artist := api.Group("/artists")
 		{
 			artist.GET("/:id", h.getArtist)
-			artist.GET("/", h.getAllArtist)
+			artist.GET("/", h.getAllArtists)
 			artist.POST("/", h.createArtist)
 			artist.PUT("/:id", h.updateArtist)
 			artist.DELETE("/:id", h.deleteArtist) 
 		}
-
-		item := api.Group("/items")
-		
-		{
-		item.GET("/:id", h.getItem)
-		item.GET("/", h.getAllItems)
-		item.POST("/", h.createItem)
-		item.PUT("/:id", h.updateItem)
-		item.DELETE("/:id", h.deleteItem)
-		}
-
 		record := api.Group("/records")
 		{
 			record.GET("/:id", h.getRecord)
