@@ -2,7 +2,10 @@ module github.com/Pinkman-77/records-restapi
 
 go 1.23.5
 
-require github.com/gin-gonic/gin v1.10.0
+require (
+	github.com/gin-gonic/gin v1.10.0
+	github.com/google/uuid v1.6.0
+)
 
 require (
 	github.com/jackc/pgpassfile v1.0.0 // indirect
