@@ -5,6 +5,7 @@ import (
 
 	recordsrestapi "github.com/Pinkman-77/records-restapi"
 	"github.com/jmoiron/sqlx"
+    "fmt"
 )
 
 type ArtistPostgres struct {
@@ -106,4 +107,32 @@ func (r *ArtistPostgres) GetArtist(id int) (recordsrestapi.Artist, error) {
 	var artist recordsrestapi.Artist
 	err := r.db.Get(&artist, "SELECT id, name FROM artists WHERE id = $1", id)
 	return artist, err
+}
+
+func (r *ArtistPostgres) UpdateArtist(id int, updatedArtist recordsrestapi.Artist) error {
+    updateQuery := fmt.Sprintf("UPDATE %s SET name = $1 WHERE id = $2", artistTable)
+    _, err := r.db.Exec(updateQuery, updatedArtist.Name, id)
+    if err != nil {
+            return fmt.Errorf("failed to update artist: %w", err)
+    }
+    return nil
+}
+
+func (r *ArtistPostgres) DeleteArtist(id int) error {
+    deleteQuery := fmt.Sprintf("DELETE FROM %s WHERE id = $1", artistTable)
+    result, err := r.db.Exec(deleteQuery, id)
+    if err != nil {
+            return fmt.Errorf("failed to delete artist: %w", err)
+    }
+
+    rowsAffected, err := result.RowsAffected()
+    if err != nil {
+            return fmt.Errorf("failed to check rows affected: %w", err)
+    }
+
+    if rowsAffected == 0 {
+            return fmt.Errorf("artist not found with ID: %d", id)
+    }
+
+    return nil
 }

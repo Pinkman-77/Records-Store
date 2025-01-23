@@ -9,10 +9,14 @@ type Creator interface {
         CreateArtist(artist recordsrestapi.Artist) (int, error)
         GetAllArtists() ([]recordsrestapi.ArtistWithRecords, error)
         GetArtist(id int) (recordsrestapi.Artist, error)
+        UpdateArtist(id int, updatedArtist recordsrestapi.Artist) error
+        DeleteArtist(id int) error
+
 }
 
+
 type Record interface {
-        CreateRecord(record recordsrestapi.Record) (recordsrestapi.Record, error)
+
 }
 
 type Repository struct {

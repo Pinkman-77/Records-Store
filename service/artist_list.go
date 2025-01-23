@@ -25,3 +25,12 @@ func (r *ArtistList) GetAllArtists() ([]recordsrestapi.ArtistWithRecords, error)
 func (r *ArtistList) GetArtist(id int) (recordsrestapi.Artist, error) {
 	return r.repo.GetArtist(id)
 }
+
+func (r *ArtistList) UpdateArtist(id int, updatedArtist recordsrestapi.Artist) error {
+	return r.repo.UpdateArtist(id, updatedArtist)
+}
+
+
+func (r *ArtistList) DeleteArtist(id int) error {
+	return r.repo.DeleteArtist(id)
+}
