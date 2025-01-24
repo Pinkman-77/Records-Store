@@ -22,7 +22,7 @@ func (r *ArtistList) GetAllArtists() ([]recordsrestapi.ArtistWithRecords, error)
 	return r.repo.GetAllArtists()
 }
 
-func (r *ArtistList) GetArtist(id int) (recordsrestapi.Artist, error) {
+func (r *ArtistList) GetArtist(id int) (recordsrestapi.ArtistWithRecords, error) {
 	return r.repo.GetArtist(id)
 }
 

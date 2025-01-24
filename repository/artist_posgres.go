@@ -3,9 +3,11 @@ package repository
 import (
 	"database/sql"
 
+	"fmt"
+
 	recordsrestapi "github.com/Pinkman-77/records-restapi"
 	"github.com/jmoiron/sqlx"
-    "fmt"
+	"github.com/lib/pq"
 )
 
 type ArtistPostgres struct {
@@ -42,7 +44,7 @@ func (r *ArtistPostgres) CreateArtist(artist recordsrestapi.Artist) (int, error)
 func (r *ArtistPostgres) GetAllArtists() ([]recordsrestapi.ArtistWithRecords, error) {
     var result []recordsrestapi.ArtistWithRecords
     query := `
-        SELECT a.id, a.name, r.id AS record_id, r.title, r.year 
+        SELECT a.id, a.name, r.id AS record_id, r.title, r.year, r.tracklist, r.credits, r.duration
         FROM artists a
         LEFT JOIN records r ON a.id = r.artist_id
     `
@@ -60,14 +62,16 @@ func (r *ArtistPostgres) GetAllArtists() ([]recordsrestapi.ArtistWithRecords, er
         var artistName string
         var recordID sql.NullString
         var recordTitle sql.NullString
-        var recordYear sql.NullInt64 // Keep as sql.NullInt64
+        var recordYear sql.NullInt64
+        var tracklist pq.StringArray
+        var credits pq.StringArray
+        var duration sql.NullString
 
-        err := rows.Scan(&artistID, &artistName, &recordID, &recordTitle, &recordYear)
+        err := rows.Scan(&artistID, &artistName, &recordID, &recordTitle, &recordYear, &tracklist, &credits, &duration)
         if err != nil {
             return nil, err
         }
 
-        // Initialize artist entry if it doesn't exist
         if _, exists := artistMap[artistID]; !exists {
             artistMap[artistID] = &recordsrestapi.ArtistWithRecords{
                 ID:      artistID,
@@ -76,26 +80,21 @@ func (r *ArtistPostgres) GetAllArtists() ([]recordsrestapi.ArtistWithRecords, er
             }
         }
 
-        // Only add records if recordID is valid
         if recordID.Valid {
             record := recordsrestapi.Record{
-                ID:     recordID.String,
-                Title:  recordTitle.String,
-                Artist: artistName,
-                Year:   0, // Default value for Year
+                ID:        recordID.String,
+                Title:     recordTitle.String,
+                Artist:    artistName,
+                Year:      recordYear.Int64,
+                Tracklist: tracklist, // Assign properly parsed tracklist array
+                Credits:   credits,   // Assign properly parsed credits array
+                Duration:  duration.String,
             }
 
-            // Assign valid year if available
-            if recordYear.Valid {
-                record.Year = recordYear.Int64 // Use the valid year value
-            }
-
-            // Append the record to the artist's records
             artistMap[artistID].Records = append(artistMap[artistID].Records, record)
         }
     }
 
-    // Convert map to slice for final result
     for _, artistWithRecords := range artistMap {
         result = append(result, *artistWithRecords)
     }
@@ -103,11 +102,55 @@ func (r *ArtistPostgres) GetAllArtists() ([]recordsrestapi.ArtistWithRecords, er
     return result, nil
 }
 
-func (r *ArtistPostgres) GetArtist(id int) (recordsrestapi.Artist, error) {
-	var artist recordsrestapi.Artist
-	err := r.db.Get(&artist, "SELECT id, name FROM artists WHERE id = $1", id)
-	return artist, err
+
+func (r *ArtistPostgres) GetArtist(id int) (recordsrestapi.ArtistWithRecords, error) {
+    var artist recordsrestapi.ArtistWithRecords
+    artist.Records = []recordsrestapi.Record{} // Initialize empty slice to avoid null values
+
+    query := `
+        SELECT a.id, a.name, r.id AS record_id, r.title, r.year, r.tracklist, r.credits, r.duration 
+        FROM artists a
+        LEFT JOIN records r ON a.id = r.artist_id
+        WHERE a.id = $1
+    `
+
+    rows, err := r.db.Query(query, id)
+    if err != nil {
+        return artist, err
+    }
+    defer rows.Close()
+
+    for rows.Next() {
+        var recordID sql.NullString
+        var recordTitle sql.NullString
+        var recordYear sql.NullInt64
+        var tracklist pq.StringArray
+        var credits pq.StringArray
+        var duration sql.NullString
+
+        err := rows.Scan(&artist.ID, &artist.Name, &recordID, &recordTitle, &recordYear, &tracklist, &credits, &duration)
+        if err != nil {
+            return artist, err
+        }
+
+        // Check if record exists, otherwise skip adding a record
+        if recordID.Valid {
+            record := recordsrestapi.Record{
+                ID:        recordID.String,
+                Title:     recordTitle.String,
+                Artist:    artist.Name,
+                Year:      recordYear.Int64,
+                Tracklist: tracklist, // Properly scan tracklist array
+                Credits:   credits,   // Properly scan credits array
+                Duration:  duration.String,
+            }
+            artist.Records = append(artist.Records, record)
+        }
+    }
+
+    return artist, nil
 }
+
 
 func (r *ArtistPostgres) UpdateArtist(id int, updatedArtist recordsrestapi.Artist) error {
     updateQuery := fmt.Sprintf("UPDATE %s SET name = $1 WHERE id = $2", artistTable)

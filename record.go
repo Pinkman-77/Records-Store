@@ -3,16 +3,16 @@ package recordsrestapi
 import ()
 
 type Artist struct {
-	ID      uint     `gorm:"primaryKey"`
-	Name    string   `gorm:"not null" binding:"required"` // Name of the artist
-	Records []Record  `gorm:"foreignKey:ArtistID"`
+	ID     uint     `gorm:"primaryKey"`
+	Name   string   `gorm:"not null" binding:"required"` // Name of the artist
+	Records []Record `gorm:"foreignKey:ArtistID"`
 }
 
 type Record struct {
-	ID     string         `json:"id"`      // Use string instead of sql.NullString
-	Title  string         `json:"title" binding:"required"` // Title of the record
-	Artist string         `json:"artist"`  // Use string instead of sql.NullString
-	Year   int64 `json:"year"`    // Use sql.NullInt64 for nullable year
+	ID     string  `json:"id"`      // Unique identifier for the record
+	Title  string  `json:"title" binding:"required"`    // Title of the record
+	Artist string  `json:"artist"`   // ID or name of the artist (you may want to use an ID reference)
+	Year   int64     `json:"year"`    // Release year of the record
 	Tracklist []string `json:"tracklist"` // List of song titles in the record
 	Credits   []string `json:"credits"`   // List of artists featured on the record
 	Duration  string   `json:"duration"`  // Total duration of the record (e.g., "45:30")
