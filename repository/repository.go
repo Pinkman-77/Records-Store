@@ -19,6 +19,9 @@ type Record interface {
         CreateRecord(record recordsrestapi.Record) (int, error)
         GetAllRecords() ([]recordsrestapi.Record, error)
         GetRecord(id int) (recordsrestapi.RecordWithArtist, error) 
+        UpdateRecord(id int, updatedRecord recordsrestapi.Record) error
+        PatchRecord(id int, updates map[string]interface{}) error
+        DeleteRecord(id int) error
 
 }
 

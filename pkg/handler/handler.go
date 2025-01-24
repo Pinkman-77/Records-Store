@@ -32,6 +32,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			record.GET("/", h.getAllRecords)
 			record.POST("/", h.createRecord)
 			record.PUT("/:id", h.updateRecord)
+			record.PATCH("/:id", h.patchRecord)
 			record.DELETE("/:id", h.deleteRecord) 
 		}
 	}

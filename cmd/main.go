@@ -1,7 +1,11 @@
 package main
 
 import (
+	"context"
 	"log"
+	"os"
+	"os/signal"
+	"syscall"
 
 	recordsrestapi "github.com/Pinkman-77/records-restapi"
 	"github.com/Pinkman-77/records-restapi/pkg/handler"
@@ -21,8 +25,27 @@ func main() {
 	handler := handler.NewHandler(service)
 	srv := new(recordsrestapi.Server)
 
-	if err := srv.Start("8080", handler.InitRoutes()); err != nil {
-		log.Fatal("Coudn't start server: ", err)
-	}
+	go func ()  {
+		if err := srv.Start("8080", handler.InitRoutes()); err != nil {
+			log.Fatal("Coudn't start server: ", err)
+		}
+	}()
+
+	log.Print("The App started")
+
+	quit := make(chan os.Signal, 1)
 	
+	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT)
+	<-quit
+
+	log.Print("The App is shutting down...")
+
+	if err := srv.Stop(context.Background()); err != nil {
+		log.Fatal("Coudn't shutdown server: ", err)
+	}
+
+	if err := db.Close(); err != nil {
+		log.Fatal("Coudn't close DB: ", err)
+	}
+
 }

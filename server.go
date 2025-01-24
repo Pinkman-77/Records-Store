@@ -1,6 +1,7 @@
 package recordsrestapi
 
 import (
+	"context"
 	"net/http"
 	"time"
 )
@@ -19,6 +20,6 @@ func (s *Server) Start(port string, handler http.Handler) error {
 	return s.http.ListenAndServe()
 }
 
-func (s *Server) Stop() error {
-	return s.http.Shutdown(nil)
+func (s *Server) Stop(ctx context.Context) error {
+	return s.http.Shutdown(ctx)
 }

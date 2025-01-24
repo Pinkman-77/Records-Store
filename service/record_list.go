@@ -24,3 +24,15 @@ func (r *RecordList) GetAllRecords() ([]recordsrestapi.Record, error) {
 func (r *RecordList) GetRecord(id int) (recordsrestapi.RecordWithArtist, error) {
         return r.repo.GetRecord(id)
 }
+
+func (r *RecordList) UpdateRecord(id int, record recordsrestapi.Record) error {
+	return r.repo.UpdateRecord(id, record)
+}
+
+func (r *RecordList) PatchRecord(id int, updates map[string]interface{}) error {
+	return r.repo.PatchRecord(id, updates)
+}
+
+func (r *RecordList) DeleteRecord(id int) error {
+	return r.repo.DeleteRecord(id)
+}
