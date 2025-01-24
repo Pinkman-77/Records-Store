@@ -17,6 +17,9 @@ type Creator interface {
 
 type Record interface {
         CreateRecord(record recordsrestapi.Record) (int, error)
+        GetAllRecords() ([]recordsrestapi.Record, error)
+        GetRecord(id int) (recordsrestapi.RecordWithArtist, error) 
+
 }
 
 type Repository struct {

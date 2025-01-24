@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"strconv"
 
 	recordsrestapi "github.com/Pinkman-77/records-restapi"
 	"github.com/gin-gonic/gin"
@@ -25,12 +26,32 @@ func (h *Handler) createRecord(c *gin.Context) {
 }
 
 func (h *Handler) getRecord(c *gin.Context) {
-       
+	idStr := c.Param("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid record ID"})
+		return
+	}
+
+	record, err := h.services.Record.GetRecord(id)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Record not found"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"record": record})
 }
 
 func (h *Handler) getAllRecords(c *gin.Context) {
+	records, err := h.services.Record.GetAllRecords()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 
+	c.JSON(http.StatusOK, gin.H{"records": records})
 }
+
 
 func (h *Handler) updateRecord(c *gin.Context) {
 

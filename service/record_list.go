@@ -17,3 +17,10 @@ func (r *RecordList) CreateRecord(record recordsrestapi.Record) (int, error) {
 	return r.repo.CreateRecord(record)
 }
 
+func (r *RecordList) GetAllRecords() ([]recordsrestapi.Record, error) {
+        return r.repo.GetAllRecords()
+}
+
+func (r *RecordList) GetRecord(id int) (recordsrestapi.RecordWithArtist, error) {
+        return r.repo.GetRecord(id)
+}

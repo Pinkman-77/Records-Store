@@ -29,4 +29,7 @@ type RecordWithArtist struct {
 	Title  string `json:"title"`
 	Artist string `json:"artist"` // This will hold the artist's name
 	Year   int64    `json:"year"`
+	Tracklist []string `json:"tracklist"` // List of song titles in the record
+	Credits   []string `json:"credits"`   // List of artists featured on the record
+	Duration  string   `json:"duration"`  // Total duration of the record (e.g., "45:30")
 }
