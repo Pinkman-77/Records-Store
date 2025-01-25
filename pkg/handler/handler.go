@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"github.com/Pinkman-77/records-restapi/service"
+	"github.com/Pinkman-77/records-restapi/pkg/service"
 	"github.com/gin-gonic/gin"
 )
 

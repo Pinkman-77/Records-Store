@@ -2,7 +2,7 @@ package service
 
 import (
 	recordsrestapi "github.com/Pinkman-77/records-restapi"
-	"github.com/Pinkman-77/records-restapi/repository"
+	"github.com/Pinkman-77/records-restapi/pkg/repository"
 )
 
 type RecordList struct {

@@ -2,8 +2,10 @@ package service
 
 import (
         recordsrestapi "github.com/Pinkman-77/records-restapi"
-        "github.com/Pinkman-77/records-restapi/repository"
+        "github.com/Pinkman-77/records-restapi/pkg/repository"
 )
+
+//go::generate mockgen -source=service.go -destination=mocks/mock.go
 
 type Creator interface {
         CreateArtist(artist recordsrestapi.Artist) (int, error)

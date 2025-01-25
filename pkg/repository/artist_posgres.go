@@ -19,27 +19,32 @@ func NewArtistPostgres(db *sqlx.DB) *ArtistPostgres {
 }
 
 func (r *ArtistPostgres) CreateArtist(artist recordsrestapi.Artist) (int, error) {
+    
 	tx, err := r.db.Beginx()
-
 	if err != nil {
-		return 0, err
+		return 0, fmt.Errorf("failed to begin transaction: %w", err)
 	}
 
 	var id int
 
 	err = tx.QueryRow("INSERT INTO artists (name) VALUES ($1) RETURNING id", artist.Name).Scan(&id)
-
 	if err != nil {
-		return 0, err
+		// Rollback transaction on error
+		rollbackErr := tx.Rollback()
+		if rollbackErr != nil {
+			return 0, fmt.Errorf("failed to rollback transaction after error: %w", rollbackErr)
+		}
+		return 0, fmt.Errorf("failed to insert artist: %w", err)
 	}
 
 	err = tx.Commit()
-
 	if err != nil {
-		return 0, err
+		return 0, fmt.Errorf("failed to commit transaction: %w", err)
 	}
+
 	return id, nil
 }
+
 
 func (r *ArtistPostgres) GetAllArtists() ([]recordsrestapi.ArtistWithRecords, error) {
     var result []recordsrestapi.ArtistWithRecords
