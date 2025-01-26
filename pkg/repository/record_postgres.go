@@ -43,8 +43,8 @@ func (r *RecordPostgres) CreateRecord(record recordsrestapi.Record) (int, error)
 		record.Title,
 		artistID,
 		record.Year,
-		pq.Array(record.Tracklist), // Convert slice to PostgreSQL array
-		pq.Array(record.Credits),   // Convert slice to PostgreSQL array
+		pq.Array(record.Tracklist), 
+		pq.Array(record.Credits),   
 		record.Duration,
 	).Scan(&id)
 

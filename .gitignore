@@ -1,1 +1,2 @@
-.configs
+.gitignore
+.cmd/configs
