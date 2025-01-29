@@ -47,7 +47,7 @@ func (r *ArtistPostgres) CreateArtist(artist recordsrestapi.Artist) (int, error)
 
 
 func (r *ArtistPostgres) GetAllArtists() ([]recordsrestapi.ArtistWithRecords, error) {
-    var result []recordsrestapi.ArtistWithRecords
+    var result []recordsrestapi.ArtistWithRecords // Explicitly initialize as an empty slice
     query := `
         SELECT a.id, a.name, r.id AS record_id, r.title, r.year, r.tracklist, r.credits, r.duration
         FROM artists a
@@ -91,8 +91,8 @@ func (r *ArtistPostgres) GetAllArtists() ([]recordsrestapi.ArtistWithRecords, er
                 Title:     recordTitle.String,
                 Artist:    artistName,
                 Year:      recordYear.Int64,
-                Tracklist: tracklist, // Assign properly parsed tracklist array
-                Credits:   credits,   // Assign properly parsed credits array
+                Tracklist: tracklist,
+                Credits:   credits,
                 Duration:  duration.String,
             }
 
@@ -107,7 +107,6 @@ func (r *ArtistPostgres) GetAllArtists() ([]recordsrestapi.ArtistWithRecords, er
     return result, nil
 }
 
-
 func (r *ArtistPostgres) GetArtist(id int) (recordsrestapi.ArtistWithRecords, error) {
     var artist recordsrestapi.ArtistWithRecords
     artist.Records = []recordsrestapi.Record{} // Initialize empty slice to avoid null values
@@ -119,7 +118,7 @@ func (r *ArtistPostgres) GetArtist(id int) (recordsrestapi.ArtistWithRecords, er
         WHERE a.id = $1
     `
 
-    rows, err := r.db.Query(query, id)
+    rows, err := r.db.Queryx(query, id)
     if err != nil {
         return artist, err
     }

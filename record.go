@@ -3,7 +3,7 @@ package recordsrestapi
 import ()
 
 type Artist struct {
-	ID     uint     `gorm:"primaryKey"`
+	ID     int     `gorm:"primaryKey"`
 	Name   string   `gorm:"not null" binding:"required"` // Name of the artist
 	Records []Record `gorm:"foreignKey:ArtistID"`
 }
