@@ -82,7 +82,7 @@ docker run -p 8080:8080 --config-file
 
 docker-compose up --build
 
-👨‍💻 Author
+👨‍💻 Creator
 Vitaliy aka Pinkman-77
 📧 Email: ukvitaly7@gmail.com
 🐙 GitHub: Pinkman-77
