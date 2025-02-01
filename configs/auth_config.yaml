@@ -1,0 +1,14 @@
+env: "local"
+token_tll: "24h"  # Matches your JWT expiration setting
+
+database:
+  host: "localhost"
+  port: 5432
+  user: "postgres"
+  password: "postgres"
+  name: "rap_records_shop"
+  sslmode: "disable"
+
+grpc:
+  port: 50051
+  timeout: "10h"
