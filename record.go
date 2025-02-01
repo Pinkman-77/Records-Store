@@ -1,6 +1,5 @@
 package recordsrestapi
 
-import ()
 
 type Artist struct {
 	ID     int     `gorm:"primaryKey"`
