@@ -3,7 +3,6 @@ module github.com/Pinkman-77/records-restapi
 go 1.23.5
 
 require (
-	github.com/Pinkman-77/Protobuf v0.0.0-20250129105819-f4c317af033a
 	github.com/gin-gonic/gin v1.10.0
 	github.com/stretchr/testify v1.9.0
 	github.com/zhashkevych/go-sqlxmock v1.5.2-0.20201023121933-f973d0041cfc
@@ -40,6 +39,7 @@ require (
 )
 
 require (
+	github.com/Pinkman-77/Protobuf v0.0.0-20250202134734-d05f11408187
 	github.com/bytedance/sonic v1.11.6 // indirect
 	github.com/bytedance/sonic/loader v0.1.1 // indirect
 	github.com/cloudwego/base64x v0.1.4 // indirect

@@ -90,6 +90,27 @@ func (s *Storage) IsAdmin(ctx context.Context, userID int64) (bool, error) {
 	return isAdmin, nil
 }
 
+func (s *Storage) CreateApp(ctx context.Context, name, secret string) (int64, error) {
+	const op = "storage.postgres.CreateApp"
+
+	stmt := `INSERT INTO apps(name, secret) VALUES($1, $2) RETURNING id`
+
+	var id int64
+
+	err := s.db.QueryRowContext(ctx, stmt, name, secret).Scan(&id)
+
+	if err != nil {
+		if pgErr, ok := err.(*pq.Error); ok && pgErr.Code == "23505" { // PostgreSQL unique violation
+			return 0, fmt.Errorf("%s: %w", op, storage.ErrAppExists)
+		}
+
+		return 0, fmt.Errorf("%s: %w", op, err)
+
+	}
+
+	return id, nil
+}
+
 // App retrieves an application by ID
 func (s *Storage) App(ctx context.Context, id int) (models.App, error) {
 	const op = "storage.postgres.App"
