@@ -2,10 +2,12 @@ package recordsrestapi
 
 
 type Artist struct {
-	ID     int     `gorm:"primaryKey"`
-	Name   string   `gorm:"not null" binding:"required"` // Name of the artist
+	ID      int     `gorm:"primaryKey"`
+	Name    string  `gorm:"not null" binding:"required"`
+	UserID  int     `gorm:"not null"`
 	Records []Record `gorm:"foreignKey:ArtistID"`
 }
+
 
 type Record struct {
 	ID     string  `json:"id"`      // Unique identifier for the record
@@ -20,8 +22,11 @@ type Record struct {
 type ArtistWithRecords struct {
 	ID      uint     `json:"id"`
 	Name    string   `json:"name"`
-	Records []Record  `json:"records"`
+	UserID  uint     `json:"user_id"`
+	Email   string   `json:"email"`
+	Records []Record `json:"records"`
 }
+
 
 type RecordWithArtist struct {
 	ID     int    `json:"id"`

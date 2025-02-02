@@ -8,24 +8,36 @@ import (
 )
 
 func (h *Handler) createArtist(c *gin.Context) {
-	var input recordsrestapi.Artist
+	var input struct {
+		Name  string `json:"name" binding:"required"`
+		Email string `json:"email" binding:"required"`
+	}
 
 	if err := c.BindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 	
-	artist, err := h.services.Creator.CreateArtist(input)
+	userID, err := h.services.Creator.GetUserIDByEmail(input.Email)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "User not found"})
+		return
+	}
+
+	artist := recordsrestapi.Artist{
+		Name:   input.Name,
+		UserID: userID,
+	}
+
+	artistID, err := h.services.Creator.CreateArtist(artist)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, map[string]interface{}{
-		"artist": artist,
-	})
-
+	c.JSON(http.StatusOK, gin.H{"artist_id": artistID})
 }
+
 
 func (h *Handler) getAllArtists(c *gin.Context) {
 	artists, err := h.services.Creator.GetAllArtists()

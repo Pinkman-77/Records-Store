@@ -19,21 +19,16 @@ func NewArtistPostgres(db *sqlx.DB) *ArtistPostgres {
 }
 
 func (r *ArtistPostgres) CreateArtist(artist recordsrestapi.Artist) (int, error) {
-    
 	tx, err := r.db.Beginx()
 	if err != nil {
 		return 0, fmt.Errorf("failed to begin transaction: %w", err)
 	}
 
 	var id int
-
-	err = tx.QueryRow("INSERT INTO artists (name) VALUES ($1) RETURNING id", artist.Name).Scan(&id)
+	err = tx.QueryRow("INSERT INTO artists (name, user_id) VALUES ($1, $2) RETURNING id",
+		artist.Name, artist.UserID).Scan(&id)
 	if err != nil {
-		// Rollback transaction on error
-		rollbackErr := tx.Rollback()
-		if rollbackErr != nil {
-			return 0, fmt.Errorf("failed to rollback transaction after error: %w", rollbackErr)
-		}
+		tx.Rollback()
 		return 0, fmt.Errorf("failed to insert artist: %w", err)
 	}
 
@@ -46,12 +41,13 @@ func (r *ArtistPostgres) CreateArtist(artist recordsrestapi.Artist) (int, error)
 }
 
 
+
 func (r *ArtistPostgres) GetAllArtists() ([]recordsrestapi.ArtistWithRecords, error) {
     var result []recordsrestapi.ArtistWithRecords // Explicitly initialize as an empty slice
     query := `
-        SELECT a.id, a.name, r.id AS record_id, r.title, r.year, r.tracklist, r.credits, r.duration
-        FROM artists a
-        LEFT JOIN records r ON a.id = r.artist_id
+        SELECT a.id, a.name, a.user_id, u.email 
+     FROM artists a
+        JOIN users u ON a.user_id = u.id
     `
 
     rows, err := r.db.Query(query)

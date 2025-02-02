@@ -13,6 +13,7 @@ type Creator interface {
         GetArtist(id int) (recordsrestapi.ArtistWithRecords, error)
         UpdateArtist(id int, updatedArtist recordsrestapi.Artist) error
         DeleteArtist(id int) error
+        GetUserIDByEmail(email string) (int, error)
  
 }
 type Record interface {

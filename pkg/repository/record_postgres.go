@@ -123,6 +123,16 @@ func (r *RecordPostgres) GetRecord(id int) (recordsrestapi.RecordWithArtist, err
     
         return records, nil
     }
+    // 
+    func (r *ArtistPostgres) GetUserIDByEmail(email string) (int, error) {
+        var userID int
+        err := r.db.QueryRow("SELECT id FROM users WHERE email = $1", email).Scan(&userID)
+        if err != nil {
+            return 0, fmt.Errorf("user not found: %w", err)
+        }
+        return userID, nil
+    }
+    
 
     func (r *RecordPostgres) UpdateRecord(id int, record recordsrestapi.Record) error {
         query := fmt.Sprintf(`

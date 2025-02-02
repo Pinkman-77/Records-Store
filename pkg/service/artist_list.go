@@ -34,3 +34,8 @@ func (r *ArtistList) UpdateArtist(id int, updatedArtist recordsrestapi.Artist) e
 func (r *ArtistList) DeleteArtist(id int) error {
 	return r.repo.DeleteArtist(id)
 }
+
+func (r *ArtistList) GetUserIDByEmail(email string) (int, error) {
+	return r.repo.GetUserIDByEmail(email)
+}
+ 
